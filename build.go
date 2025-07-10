@@ -7,9 +7,7 @@ import (
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/client"
 	dc "github.com/fsouza/go-dockerclient"
-	"github.com/goccy/go-yaml"
 	"github.com/urfave/cli/v3"
-	"os"
 )
 
 func doBuild(ctx context.Context, cmd *cli.Command) error {
@@ -22,11 +20,6 @@ func doBuild(ctx context.Context, cmd *cli.Command) error {
 	}(dockerClient)
 
 	project, err := ResolveProject(".")
-	if err != nil {
-		return err
-	}
-
-	err = yaml.NewEncoder(os.Stdout, yaml.Indent(2)).Encode(project)
 	if err != nil {
 		return err
 	}
