@@ -4,7 +4,7 @@ go 1.23.0
 
 require (
 	github.com/compose-spec/compose-go/v2 v2.7.1
-	github.com/docker/docker v28.3.1+incompatible
+	github.com/docker/docker v28.3.2+incompatible
 	github.com/fsouza/go-dockerclient v1.12.1
 	github.com/goccy/go-yaml v1.18.0
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510
