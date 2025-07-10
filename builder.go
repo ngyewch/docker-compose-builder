@@ -26,10 +26,11 @@ func NewBuilder(dockerClient *client.Client, project *Project) *Builder {
 
 func (builder *Builder) BuildImage(ctx context.Context, repository string, build *types.BuildConfig) (string, error) {
 	var imageId string
-	repo := builder.project.FindRepository(repository)
+	repo := builder.project.GetRepository(repository)
 	if repo == nil {
 		return imageId, nil
 	}
+	workingDirectory := os.ExpandEnv(repo.WorkingDirectory)
 	for _, command := range repo.Commands {
 		argv, err := shlex.Split(command)
 		if err != nil {
@@ -37,7 +38,7 @@ func (builder *Builder) BuildImage(ctx context.Context, repository string, build
 		}
 		fmt.Printf("========== Building image for %s ==========\n", repository)
 		cmd := exec.CommandContext(ctx, argv[0], argv[1:]...)
-		cmd.Dir = repo.Directory
+		cmd.Dir = workingDirectory
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		err = cmd.Run()
@@ -47,7 +48,7 @@ func (builder *Builder) BuildImage(ctx context.Context, repository string, build
 		}
 	}
 	if repo.ImageIdPath != "" {
-		f, err := os.Open(filepath.Join(repo.Directory, repo.ImageIdPath))
+		f, err := os.Open(filepath.Join(workingDirectory, repo.ImageIdPath))
 		if err != nil {
 			return imageId, err
 		}

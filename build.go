@@ -7,6 +7,7 @@ import (
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/client"
 	dc "github.com/fsouza/go-dockerclient"
+	"github.com/goccy/go-yaml"
 	"github.com/urfave/cli/v3"
 	"os"
 )
@@ -20,16 +21,12 @@ func doBuild(ctx context.Context, cmd *cli.Command) error {
 		_ = dockerClient.Close()
 	}(dockerClient)
 
-	project, err := func(path string) (*Project, error) {
-		f, err := os.Open(path)
-		if err != nil {
-			return nil, err
-		}
-		defer func(f *os.File) {
-			_ = f.Close()
-		}(f)
-		return LoadProject(f)
-	}("docker-compose-builder.yml")
+	project, err := ResolveProject(".")
+	if err != nil {
+		return err
+	}
+
+	err = yaml.NewEncoder(os.Stdout, yaml.Indent(2)).Encode(project)
 	if err != nil {
 		return err
 	}

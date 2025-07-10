@@ -1,32 +1,65 @@
 package main
 
 import (
-	"github.com/goccy/go-yaml"
-	"io"
+	"os"
+	"path/filepath"
 )
 
 type Project struct {
-	Repositories map[string]Repository `json:"repositories"`
+	RepositoryMap map[string]RepositoryBuildSpec
 }
 
-type Repository struct {
-	Directory   string   `yaml:"directory"`
-	Commands    []string `yaml:"commands"`
-	ImageIdPath string   `yaml:"imageIdPath"`
+type RepositoryBuildSpec struct {
+	WorkingDirectory string
+	Commands         []string
+	ImageIdPath      string
 }
 
-func LoadProject(r io.Reader) (*Project, error) {
-	var project Project
-	decoder := yaml.NewDecoder(r, yaml.Strict())
-	err := decoder.Decode(&project)
+func ResolveProject(dir string) (*Project, error) {
+	var repositoryMap = make(map[string]RepositoryBuildSpec)
+	err := doResolveProject(repositoryMap, dir)
 	if err != nil {
 		return nil, err
 	}
-	return &project, nil
+	return &Project{
+		RepositoryMap: repositoryMap,
+	}, nil
 }
 
-func (p *Project) FindRepository(repository string) *Repository {
-	repo, ok := p.Repositories[repository]
+func doResolveProject(repositoryMap map[string]RepositoryBuildSpec, dir string) error {
+	config, err := LoadConfigurationFromFile(filepath.Join(dir, "docker-compose-builder.yml"))
+	if err != nil {
+		return err
+	}
+	for _, include := range config.Includes {
+		expandedInclude := os.ExpandEnv(include)
+		if !filepath.IsAbs(expandedInclude) {
+			expandedInclude, err = filepath.Rel(dir, expandedInclude)
+			if err != nil {
+				return err
+			}
+		}
+		err := doResolveProject(repositoryMap, expandedInclude)
+		if err != nil {
+			return err
+		}
+	}
+	for name, repository := range config.Repositories {
+		repoDir := dir
+		if repository.Directory != "" {
+			repoDir = repository.Directory
+		}
+		repositoryMap[name] = RepositoryBuildSpec{
+			WorkingDirectory: repoDir,
+			Commands:         repository.Commands,
+			ImageIdPath:      repository.ImageIdPath,
+		}
+	}
+	return nil
+}
+
+func (p *Project) GetRepository(repository string) *RepositoryBuildSpec {
+	repo, ok := p.RepositoryMap[repository]
 	if !ok {
 		return nil
 	}
