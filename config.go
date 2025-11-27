@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/goccy/go-yaml"
 	"io"
 	"os"
+
+	"github.com/goccy/go-yaml"
 )
 
 type Configuration struct {

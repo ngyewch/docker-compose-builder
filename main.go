@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"github.com/urfave/cli/v3"
 	"log"
 	"os"
 	"runtime/debug"
+
+	"github.com/urfave/cli/v3"
 )
 
 var (

@@ -3,13 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/compose-spec/compose-go/v2/types"
-	"github.com/docker/docker/client"
-	"github.com/google/shlex"
 	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/compose-spec/compose-go/v2/types"
+	"github.com/docker/docker/client"
+	"github.com/google/shlex"
 )
 
 type Builder struct {
