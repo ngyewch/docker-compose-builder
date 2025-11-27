@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"runtime/debug"
 
+	"github.com/samber/oops"
 	"github.com/urfave/cli/v3"
 )
 
@@ -37,6 +39,11 @@ func main() {
 
 	err := app.Run(context.Background(), os.Args)
 	if err != nil {
+		oopsErr, ok := oops.AsOops(err)
+		if ok {
+			fmt.Println(oopsErr.Stacktrace())
+			return
+		}
 		log.Fatal(err)
 	}
 }

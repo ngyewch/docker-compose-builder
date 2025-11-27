@@ -8,6 +8,7 @@ require (
 	github.com/fsouza/go-dockerclient v1.12.3
 	github.com/goccy/go-yaml v1.18.0
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510
+	github.com/samber/oops v1.19.4
 	github.com/urfave/cli/v3 v3.6.1
 )
 
@@ -35,9 +36,11 @@ require (
 	github.com/moby/sys/userns v0.1.0 // indirect
 	github.com/moby/term v0.5.2 // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
+	github.com/oklog/ulid/v2 v2.1.1 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/samber/lo v1.52.0 // indirect
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.1 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/xhit/go-str2duration/v2 v2.1.0 // indirect
