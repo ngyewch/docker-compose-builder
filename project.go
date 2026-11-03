@@ -31,7 +31,7 @@ func ResolveProject(dir string) (*Project, error) {
 func doResolveProject(repositoryMap map[string]RepositoryBuildSpec, dir string) error {
 	config, err := LoadConfigurationFromFile(filepath.Join(dir, "docker-compose-builder.yml"))
 	if err != nil {
-		return oops.Wrapf(err, "could not load configuration from file: %w", err)
+		return oops.Wrapf(err, "could not load configuration from file")
 	}
 	for _, include := range config.Includes {
 		expandedInclude := os.ExpandEnv(include)
