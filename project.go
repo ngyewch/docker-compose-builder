@@ -38,12 +38,12 @@ func doResolveProject(repositoryMap map[string]RepositoryBuildSpec, dir string) 
 		if !filepath.IsAbs(expandedInclude) {
 			expandedInclude, err = filepath.Rel(dir, expandedInclude)
 			if err != nil {
-				return err
+				return oops.Wrap(err)
 			}
 		}
 		err := doResolveProject(repositoryMap, expandedInclude)
 		if err != nil {
-			return err
+			return oops.Wrap(err)
 		}
 	}
 	for name, repository := range config.Repositories {

@@ -42,6 +42,7 @@ func main() {
 		oopsErr, ok := oops.AsOops(err)
 		if ok {
 			fmt.Println(oopsErr.Stacktrace())
+			os.Exit(1)
 			return
 		}
 		log.Fatal(err)
